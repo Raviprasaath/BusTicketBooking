@@ -1,17 +1,13 @@
-import { useState } from 'react'
 import LoginPage from './Components/LoginPage'
 import { createRoot } from "react-dom/client";
 import {
   createBrowserRouter,
   RouterProvider,
-  Route,
-  Link,
 } from "react-router-dom";
 import HomePage from './Components/HomePage';
+import BookingPage from './Components/BookingPage';
 
 function App() {
-
-
   const router = createBrowserRouter([
     {
       path: "/",
@@ -19,12 +15,7 @@ function App() {
     },
     {
       path: "/booking",
-      element: (
-        <div>
-          <h1>Hello World</h1>
-          <Link to="about">About Us</Link>
-        </div>
-      ),
+      element: <BookingPage />,
     },
     {
       path: "/seat",
