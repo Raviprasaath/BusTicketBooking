@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { loginPageBusImage } from '../Constants'
+import { BASE_URL, loginPageBusImage } from '../Constants'
+import { useNavigate } from 'react-router-dom'
 
 
 const LoginPage = () => {
+    const navigate = useNavigate();
     const [userDetails, setUserDetails] = useState({
         username: "",
         email: "",
@@ -13,8 +15,10 @@ const LoginPage = () => {
         emailError: false,
         passwordError: false,
     })
-
+    const [fetchError, setFetchError] = useState("");
     const [signing, setSigning] = useState(false);
+    const [loader, setLoader] = useState(false);
+
 
     const handlerToggleBtn = (e) => {
         e.preventDefault();
@@ -26,7 +30,7 @@ const LoginPage = () => {
     const handlerSigningBtn = (e, value) => {
         e.preventDefault();
         if (value === "active") {
-            console.log("yes ",userDetails);
+            fetchingFunction(userDetails);
         }
     }
 
@@ -67,6 +71,84 @@ const LoginPage = () => {
         }
     }
 
+    const fetchingFunction = async (user) => {
+        if (user.username.length !== 0) {
+            setLoader(true);
+            let url = `${BASE_URL}auth/register/`
+            let body = {
+                "username": user.username,
+                "email": user.email,
+                "password": user.password
+            }
+            const options = {
+                method: "POST",
+                body: JSON.stringify(body),
+                headers: {
+                    'Content-Type': 'application/json',
+                    accept: 'application/json',
+                },
+            }
+            try {
+                const response = await fetch(url, options);
+                console.log('re', response);
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log(result);
+                    setFetchError("Success");
+                    setTimeout(()=> {
+                        setFetchError("");
+                        setSigning(!signing);
+                        setUserDetails(prev=>({...prev, username: "", email: "", password: ""}));
+                        setErrorConditions(prev=>({...prev, nameError: false, emailError: false, passwordError: false}));
+                    }, 500)
+                } else {
+                    const result = await response.json();
+                    setFetchError(result);
+                }
+
+            } catch (e) {
+                console.error(e);
+            }
+            setLoader(false);
+        } else {
+            setLoader(true);
+            let url = `${BASE_URL}auth/login/`
+            let body = {
+                "email": user.email,
+                "password": user.password
+            }
+            const options = {
+                method: "POST",
+                body: JSON.stringify(body),
+                headers: {
+                    'Content-Type': 'application/json',
+                    accept: 'application/json',
+                },
+            }
+
+            try {
+                const response = await fetch(url, options);
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log(result);
+                    localStorage.setItem("token", JSON.stringify(result.accessToken));
+                    localStorage.setItem("email", JSON.stringify(result.email));
+                    localStorage.setItem("userId", JSON.stringify(result.userId));
+                    setFetchError("Success");
+                    setTimeout(()=> {
+                        navigate('/booking');
+                    }, 1000)
+                } else {
+                    const result = await response.json();
+                    setFetchError(result);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            setLoader(false);
+        }
+    }
+
     return (
         <>
             <div className='relative bg-teal-500 flex flex-col justify-center items-center h-dvh'>
@@ -97,6 +179,7 @@ const LoginPage = () => {
                             :
                             <button onClick={(e)=>handlerSigningBtn(e, "none")} className='bg-yellow-100 px-4 py-1 rounded-md mt-4 cursor-not-allowed'>{!signing?"Sign Up":"Login"}</button>
                     }
+                    {fetchError && <p className={`text-sm ${fetchError==="Success"?'text-green-400':'text-red-500' }`}>{fetchError}</p>}
                     </>
                     : 
                     <>
@@ -106,13 +189,14 @@ const LoginPage = () => {
                         :
                         <button onClick={(e)=>handlerSigningBtn(e, "none")} className='bg-yellow-100 px-4 py-1 rounded-md mt-4 cursor-not-allowed'>{!signing?"Sign Up":"Login"}</button>
                     }
+                    {fetchError && <p className={`text-sm ${fetchError==="Success"?'text-green-400':'text-red-500' }`}>{fetchError}</p>}
                     </>
                 }
                     <button onClick={handlerToggleBtn} className='mt-4'>
-                        {!signing ? "Already Have a Account":"New User"
-                        }
+                        {!signing ? "Already Have a Account":"New User"}
                     </button>
                 </form>
+                {loader && <>Loader...</>}
             </div>
         </>
     )
