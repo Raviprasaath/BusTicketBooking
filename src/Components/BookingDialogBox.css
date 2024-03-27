@@ -1,0 +1,36 @@
+.DialogOverlay {
+  background-color: var(--black-a9);
+  position: fixed;
+  inset: 0;
+}
+
+.DialogContent {
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: hsla(0, 0%, 3%, 0.35) 0px 10px 38px -10px, hsla(200, 100%, 1%, 0.2) 0px 30px 20px -10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 450px;
+  max-height: 85vh;
+  padding: 25px;
+}
+.DialogContent:focus {
+  outline: none;
+}
+
+.DialogTitle {
+  margin: 0;
+  font-weight: 500;
+  color: var(--mauve-12);
+  font-size: 17px;
+}
+
+.DialogDescription {
+  margin: 10px 0 20px;
+  color: var(--mauve-11);
+  font-size: 15px;
+  line-height: 1.5;
+}

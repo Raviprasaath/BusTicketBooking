@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Seats from "./Seats"
 import { steeringWheel } from "../Constants";
+import BookingDialogBox from "./BookingDialogBox";
 
 const BusWireFrame = () => {
-  const lRow1 = [1,2,3,4,5];
-  const lRow2 = [11,12,13,14,15];
-  const lRow3 = [21,22,23,24,25];
-  const tRow1 = [31,32,33,34,35];
-  const tRow2 = [41,42,43,44,45];
-  const tRow3 = [51,52,53,54,55];
+  const lRow1 = [1,3,5,7,9];
+  const lRow2 = [2,4,6,8,10];
+  const lRow3 = [11,12,13,14,15];
+  const tRow1 = [16,18,20,22,24];
+  const tRow2 = [17,19,21,23,25];
+  const tRow3 = [26,27,28,29,30];
 
   const [selectedSeat, setSelectedSeat] = useState([]);
-  const [blockedSeat, setBlockedSeat] = useState([2, 12, 23, 35, 42, 41, 53]);
-
+  const [blockedSeat, setBlockedSeat] = useState([5, 15]);
+  const [bookingChanges, setBookingChanges] = useState(false);
 
   const handlerSeatSelection = (item) => {
     if (!blockedSeat.includes(item)) {
@@ -25,6 +26,15 @@ const BusWireFrame = () => {
     }
   }
 
+  const handlerBookingUpdate = () => {
+    setBookingChanges(!bookingChanges);
+  }
+
+  useEffect(()=> {
+
+  }, [bookingChanges])
+
+  console.log(selectedSeat, bookingChanges);
 
   return (
     <>
@@ -147,6 +157,22 @@ const BusWireFrame = () => {
                 </button>
           </main>
         </div>
+        
+        <div className="mt-4 flex gap-6 flex-wrap">
+          <p className="flex justify-center items-center gap-1">
+            Already Booked Seats
+            <Seats colorValue={'grey'} />
+          </p>
+          <p className="flex justify-center items-center gap-1">
+            Selected Seat
+            <Seats colorValue={'red'} />
+          </p>
+          <p className="flex justify-center items-center gap-1">
+            Available Seats
+            <Seats colorValue={'white'} />
+          </p>
+        </div>
+          <BookingDialogBox selectedSeat={selectedSeat} handlerBookingUpdate={handlerBookingUpdate} />
       </section>
     </>
   )

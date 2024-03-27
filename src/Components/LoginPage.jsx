@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { BASE_URL, loginPageBusImage } from '../Constants'
 import { useNavigate } from 'react-router-dom'
-
+import { ThreeCircles } from 'react-loader-spinner'
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -25,6 +25,7 @@ const LoginPage = () => {
         setSigning(!signing);
         setUserDetails(prev=>({...prev, username: "", email: "", password: ""}));
         setErrorConditions(prev=>({...prev, nameError: false, emailError: false, passwordError: false}));
+        setFetchError("");
     }
     
     const handlerSigningBtn = (e, value) => {
@@ -196,7 +197,21 @@ const LoginPage = () => {
                         {!signing ? "Already Have a Account":"New User"}
                     </button>
                 </form>
-                {loader && <>Loader...</>}
+                {loader && 
+                    <>
+                        <div className="absolute top-15">
+                            <ThreeCircles
+                                visible={true}
+                                height="100"
+                                width="100"
+                                color="#FF204E"
+                                ariaLabel="three-circles-loading"
+                                wrapperStyle={{}}
+                                wrapperClass=""
+                            />
+                        </div>
+                    </>
+                }
             </div>
         </>
     )
