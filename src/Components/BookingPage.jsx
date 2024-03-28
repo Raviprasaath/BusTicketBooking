@@ -23,7 +23,7 @@ const BookingPage = () => {
                         <div></div>
                         <div className="flex gap-4 my-4">
                             <BookingDetailsDialog />
-                            
+
                             <Link to='/' onClick={handlerClearingDetails}>
                                 <button className="px-2 py-1 bg-red-400 rounded-e-md hover:bg-red-300">Logout</button>
                             </Link>

@@ -28,4 +28,4 @@ const BookingDetailsDialog = () => {
   )
 }
 
-export default BookingDetailsDialog
+export default BookingDetailsDialog;
