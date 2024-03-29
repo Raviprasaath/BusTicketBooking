@@ -77,7 +77,7 @@ const BookingPage = () => {
                             <BusWireFrame />
                         </div>
                     }
-                
+
             </div>
         </>
   )
